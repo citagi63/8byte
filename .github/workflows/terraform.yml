@@ -5,15 +5,17 @@ on:
     branches:
       - dev
       - staging
-      - release
+      - release  # release = production
 
 jobs:
   terraform:
     name: Terraform
     runs-on: ubuntu-latest
 
-    env:
-      TF_WORKSPACE: dev  
+    permissions:
+      id-token: write      # Required for OIDC auth
+      contents: read       # Required to checkout repo
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -21,11 +23,12 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.13.2 
+          terraform_version: 1.13.2
 
       - name: Set Terraform Workspace
         run: |
           BRANCH_NAME=${GITHUB_REF##*/}
+          echo "Running on branch: $BRANCH_NAME"
 
           if [ "$BRANCH_NAME" == "dev" ]; then
             echo "TF_WORKSPACE=dev" >> $GITHUB_ENV
@@ -36,22 +39,30 @@ jobs:
           else
             echo "TF_WORKSPACE=dev" >> $GITHUB_ENV
           fi
-      - name: Configure AWS Credentials
+
+      - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::253490770638:role/GitHubTerraformRole
           aws-region: ap-south-1
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -input=false
 
       - name: Select Terraform Workspace
         run: |
           terraform workspace select $TF_WORKSPACE || terraform workspace new $TF_WORKSPACE
 
-      - name: Terraform Plan
-        run: terraform plan
+      - name: Terraform Validate
+        run: terraform validate
 
-      - name: Terraform Apply
-        if: github.ref != 'refs/heads/release'  
-        run: terraform apply -auto-approve
+      - name: Terraform Plan
+        run: terraform plan -input=false
+
+      - name: Terraform Apply (non-prod)
+        if: github.ref != 'refs/heads/release'
+        run: terraform apply -auto-approve -input=false
+
+      - name: Terraform Apply (prod)
+        if: github.ref == 'refs/heads/release'
+        run: terraform apply -input=false
