@@ -18,8 +18,8 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      id-token: write      # Required for OIDC authentication
-      contents: read       # Required for checkout
+      id-token: write      
+      contents: read     
 
     env:
       AWS_REGION: ap-south-1
@@ -37,8 +37,7 @@ jobs:
       - name: Set Terraform Workspace
         run: |
           ENVIRONMENT="${{ github.event.inputs.environment }}"
-          echo "Selected environment: $ENVIRONMENT"
-          echo "TF_WORKSPACE=$ENVIRONMENT" >> $GITHUB_ENV
+          echo "WORKSPACE=$ENVIRONMENT" >> $GITHUB_ENV
 
       - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v2
@@ -50,9 +49,7 @@ jobs:
         run: terraform init -input=false
 
       - name: Select Terraform Workspace
-        run: |
-          unset TF_WORKSPACE
-          terraform workspace select $TF_WORKSPACE
+        run: terraform workspace select $WORKSPACE || terraform workspace new $WORKSPACE
 
       - name: Terraform Plan (Destroy)
         run: terraform plan -destroy -input=false
