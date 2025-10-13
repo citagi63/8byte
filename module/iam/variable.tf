@@ -1,5 +1,5 @@
 
 variable "eks_name" {
-  type = ""
+  type = string
 }
 
