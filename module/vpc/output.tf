@@ -1,6 +1,6 @@
 
 output "private_subnet_id" {
-  value = aws_subnet.private_subnet.id
+  value = [ for az in aws_aws_subnet.private_subnet : az.id]
 }
 
 output "vpc_id" {

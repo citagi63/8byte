@@ -15,7 +15,9 @@ resource "aws_iam_role" "eks_cluster_role" {
       }
     ]
   })
-  tags = var.eks_name
+  tags = {
+    Name = var.eks_name
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
@@ -44,7 +46,9 @@ resource "aws_iam_role" "eks_node_group_role" {
     ]
   })
 
-  tags = var.eks_name
+  tags = {
+    Name = var.eks_name
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
