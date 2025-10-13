@@ -37,8 +37,7 @@ jobs:
       - name: Set Terraform Workspace
         run: |
           ENVIRONMENT="${{ github.event.inputs.environment }}"
-          echo "Selected environment: $ENVIRONMENT"
-          echo "TF_WORKSPACE=$ENVIRONMENT" >> $GITHUB_ENV
+          echo "WORKSPACE=$ENVIRONMENT" >> $GITHUB_ENV
 
       - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v2
@@ -50,7 +49,7 @@ jobs:
         run: terraform init -input=false
 
       - name: Select Terraform Workspace
-        run: terraform workspace select $TF_WORKSPACE || terraform workspace new $TF_WORKSPACE
+        run: terraform workspace select $WORKSPACE || terraform workspace new $WORKSPACE
 
       - name: Terraform Plan (Destroy)
         run: terraform plan -destroy -input=false
