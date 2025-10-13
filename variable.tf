@@ -8,5 +8,5 @@ locals {
     public_subnet_cidr = terraform.workspace == "dev" ? ["172.16.1.0/24", "172.16.2.0/24"] : terraform.workspace == "staging" ? ["196.96.1.0/24", "196.96.2.0/24"] : ["10.0.1.0/24", "10.0.2.0/24"]
     private_subnet_cidr = terraform.workspace == "dev" ? ["172.16.3.0/24", "172.16.4.0/24"] : terraform.workspace == "staging" ? ["196.96.3.0/24", "196.96.4.0/24"] : ["10.0.3.0/24", "10.0.4.0/24"]
     name = terraform.workspace == "dev" ? "dev" : terraform.workspace == "staging" ? "staging" : "test"
-    ami = "ami-0ce1a5376835ae2a5"
+    ami = "AL2_x86_64"
 }
