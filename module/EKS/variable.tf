@@ -40,3 +40,13 @@ variable "security_group_ids" {
   variable "node_instance_type" {
     type = string
   }
+
+  variable "eks_worker_node_policy" {
+    type = string
+  }
+  variable "eks_cni_policy" {
+    type = string
+  }
+  variable "eks_ecr_policy" {
+    type = string
+  }

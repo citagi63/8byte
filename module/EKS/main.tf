@@ -47,10 +47,8 @@ resource "aws_eks_node_group" "main" {
 
   depends_on = [
     aws_eks_cluster.eks,
-    module.iam.eks_worker_node_policy,
-    module.iam.eks_cni_policy,
-    module.iam.eks_ecr_policy
+    var.eks_ecr_policy,
+    var.eks_cni_policy,
+    var.eks_ecrvar.eks_ecr_policy
   ]
-
-  tags = "${var.eks_name}-node-group"
 }

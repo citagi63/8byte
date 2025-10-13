@@ -34,4 +34,7 @@ module "EKS" {
    node-arn = module.iam.eks-node-role_arn
    ami = local.ami
    node_instance_type = "t2.large"
+   eks_ecr_policy = module.iam.eks_ecr_policy
+   eks_cni_policy = module.iam.eks_cni_policy
+   eks_worker_node_policy = module.iam.eks_worker_node_policy
  }

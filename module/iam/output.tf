@@ -10,7 +10,7 @@ output "eks_worker_node_policy" {
   value = aws_iam_role_policy_attachment.eks_worker_node_policy
 }
 
-output "eks-eks_cni_policy" {
+output "eks_cni_policy" {
   value = aws_iam_role_policy_attachment.eks_cni_policy
 }
 output "eks_ecr_policy" {
