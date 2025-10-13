@@ -13,8 +13,7 @@ resource "aws_eks_cluster" "eks" {
     endpoint_private_access = true
     endpoint_public_access  = true
     public_access_cidrs     = ["0.0.0.0/0"]
-    security_group_ids      = var.subnet_ids
-
+    security_group_ids      = var.security_group_id
   }
 
   access_config {

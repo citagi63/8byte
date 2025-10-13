@@ -7,8 +7,9 @@ variable "subnet_ids" {
   type = list(string)
 }
 
-variable "security_group_ids" {
-  type = string
+variable "security_group_id" {
+  type = list(string)
+  default = [ ]
   }
 
   variable "iam-arn" {
