@@ -14,5 +14,5 @@ output "eks_cni_policy" {
   value = aws_iam_role_policy_attachment.eks_cni_policy.policy_arn
 }
 output "eks_ecr_policy" {
-  value = aws_iam_role_policy_attachment.ecr_read_only.arn
+  value = aws_iam_role_policy_attachment.ecr_read_only.policy_arn
 }
