@@ -38,7 +38,7 @@ resource "aws_eks_node_group" "main" {
     min_size     = var.node_min_size
   }
 
-  instance_types = var.node_instance_type
+  instance_types = "t2.large"
   ami_type       = var.ami
 
   update_config {

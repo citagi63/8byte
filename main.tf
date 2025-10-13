@@ -33,5 +33,5 @@ module "EKS" {
    node_min_size = 1
    node-arn = module.iam.eks-node-role_arn
    ami = local.ami
-   node_instance_type = ""
+   node_instance_type = "t2.large"
  }
