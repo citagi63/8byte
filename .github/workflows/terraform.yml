@@ -24,36 +24,27 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.13.2
-
-      - name: Set Terraform Workspace
-        run: |
-          BRANCH_NAME=${GITHUB_REF##*/}
-          echo "Running on branch: $BRANCH_NAME"
-
-          if [ "$BRANCH_NAME" == "dev" ]; then
-            echo "TF_WORKSPACE=dev" >> $GITHUB_ENV
-          elif [ "$BRANCH_NAME" == "staging" ]; then
-            echo "TF_WORKSPACE=staging" >> $GITHUB_ENV
-          elif [ "$BRANCH_NAME" == "release" ]; then
-            echo "TF_WORKSPACE=prod" >> $GITHUB_ENV
-          else
-            echo "TF_WORKSPACE=dev" >> $GITHUB_ENV
-          fi
-
       - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          
           role-to-assume: arn:aws:iam::253490770638:role/GitHubTerraformRole
           aws-region: ap-south-1
+      - name: Set Terraform Workspace
+        run: |
+          BRANCH_NAME=${GITHUB_REF##*/}
+          if [ "$BRANCH_NAME" == "dev" ]; then
+            echo "WORKSPACE=dev" >> $GITHUB_ENV
+          elif [ "$BRANCH_NAME" == "staging" ]; then
+            echo "WORKSPACE=staging" >> $GITHUB_ENV
+          elif [ "$BRANCH_NAME" == "release" ]; then
+            echo "WORKSPACE=prod" >> $GITHUB_ENV
+          fi
 
       - name: Terraform Init
         run: terraform init -input=false
 
       - name: Select Terraform Workspace
-        run: |
-          unset TF_WORKSPACE
-          terraform workspace select $TF_WORKSPACE || terraform workspace new $TF_WORKSPACE
+        run: terraform workspace select $WORKSPACE || terraform workspace new $WORKSPACE
 
       - name: Terraform Validate
         run: terraform validate
