@@ -1,0 +1,61 @@
+name: Terraform Destroy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select environment to destroy"
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+jobs:
+  terraform-destroy:
+    name: Terraform Destroy
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write      # Required for OIDC authentication
+      contents: read       # Required for checkout
+
+    env:
+      AWS_REGION: ap-south-1
+      ROLE_ARN: arn:aws:iam::253490770638:role/GitHubTerraformRole
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.13.2
+
+      - name: Set Terraform Workspace
+        run: |
+          ENVIRONMENT="${{ github.event.inputs.environment }}"
+          echo "Selected environment: $ENVIRONMENT"
+          echo "TF_WORKSPACE=$ENVIRONMENT" >> $GITHUB_ENV
+
+      - name: Configure AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ env.ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Terraform Init
+        run: terraform init -input=false
+
+      - name: Select Terraform Workspace
+        run: |
+          unset TF_WORKSPACE
+          terraform workspace select $TF_WORKSPACE
+
+      - name: Terraform Plan (Destroy)
+        run: terraform plan -destroy -input=false
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve -input=false
