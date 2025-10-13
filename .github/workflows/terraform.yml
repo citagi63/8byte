@@ -66,10 +66,3 @@ jobs:
       - name: Terraform Apply
         if: github.ref != 'refs/heads/release'  # automatic for dev/staging
         run: terraform apply -auto-approve
-
-      - name: Terraform Apply Prod (manual approval)
-        if: github.ref == 'refs/heads/release'
-        uses: hmarr/auto-approve-action@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-        run: terraform apply
