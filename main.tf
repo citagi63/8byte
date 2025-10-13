@@ -25,7 +25,7 @@ module "EKS" {
    source = "./module/EKS"
    eks_version = "1.34"
    subnet_ids =  module.vpc.private_subnet_id
-   security_group_ids = module.sg.sg-id
+   security_group_id = module.sg.sg-id
    iam-arn = module.iam.iam-cluser-role_arn
    eks_name = local.name
    node_desired_size =  1
