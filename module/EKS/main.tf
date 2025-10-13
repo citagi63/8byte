@@ -49,6 +49,6 @@ resource "aws_eks_node_group" "main" {
     aws_eks_cluster.eks,
     var.eks_ecr_policy,
     var.eks_cni_policy,
-    var.eks_ecrvar.eks_ecr_policy
+    var.eks_ecr_policy
   ]
 }
