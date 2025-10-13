@@ -23,7 +23,7 @@ module "sg" {
 
 module "EKS" {
    source = "./module/EKS"
-   eks_version = "1.34"
+   eks_version = "1.32"
    subnet_ids =  module.vpc.private_subnet_id
    security_group_id = [ module.sg.sg-id ]
    iam-arn = module.iam.iam-cluser-role_arn
