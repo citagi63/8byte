@@ -41,7 +41,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
            role-to-assume: arn:aws:iam::253490770638:role/GitHubTerraformRole
-          aws-region: ap-south-
+          aws-region: ap-south-1
 
       - name: Terraform Init
         run: terraform init
