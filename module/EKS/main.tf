@@ -38,7 +38,7 @@ resource "aws_eks_node_group" "main" {
     min_size     = var.node_min_size
   }
 
-  instance_types = "t2.large"
+  instance_types = ["t2.large"]
   ami_type       = var.ami
 
   update_config {
@@ -47,9 +47,9 @@ resource "aws_eks_node_group" "main" {
 
   depends_on = [
     aws_eks_cluster.eks,
-    aws_iam_role_policy_attachment.eks_worker_node_policy,
-    aws_iam_role_policy_attachment.eks_cni_policy,
-    aws_iam_role_policy_attachment.ecr_read_only
+    module.iam.eks_worker_node_policy,
+    module.iam.eks_cni_policy,
+    module.iam.eks_ecr_policy
   ]
 
   tags = "${var.eks_name}-node-group"
