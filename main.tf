@@ -39,3 +39,11 @@ module "EKS" {
    eks_cni_policy = module.iam.eks_cni_policy
    eks_worker_node_policy = module.iam.eks_worker_node_policy
  }
+
+ module "rds" {
+   source = "./module/RDS"
+   name = local.name
+   db-security_group_id = [ module.sg.rds-sg-id ]
+   subnet_ids = module.vpc.private_subnet_id
+ }
+ 
