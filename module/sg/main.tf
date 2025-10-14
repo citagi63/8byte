@@ -85,7 +85,7 @@ resource "aws_security_group" "rds_sg_group" {
   description = "Allow inbound traffic"
   vpc_id      = var.vpc_id
   tags = {
-    Name =  "${var.sg-name}-sg"
+    Name =  "${var.sg-name}-db-sg"
   }
 }
 
