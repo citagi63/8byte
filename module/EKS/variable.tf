@@ -12,6 +12,11 @@ variable "security_group_id" {
   default = [ ]
   }
 
+variable "worker_security_group_id" {
+  description = "Security group IDs for the EKS worker nodes"
+  type        = list(string)
+}
+
   variable "iam-arn" {
     type = string
   }

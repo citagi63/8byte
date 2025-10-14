@@ -19,7 +19,7 @@ resource "aws_subnet" "public_subnet" {
   vpc_id                  = aws_vpc.test_vpc.id
   cidr_block              = each.value.cidr_block
   availability_zone       = each.value.availability_zone
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
 
   tags = {
     Name = "${var.name}-${each.value.availability_zone}-public-subnet"
@@ -37,10 +37,16 @@ resource "aws_subnet" "private_subnet" {
   vpc_id                  = aws_vpc.test_vpc.id
   cidr_block              = each.value.cidr_block
   availability_zone       = each.value.availability_zone
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
+
+
+
 
   tags = {
     Name = "${var.name}-${each.value.availability_zone}-private-subnet"
+    "kubernetes.io/role/internal-elb" = "1"
+    "kubernetes.io/cluster/${var.name}-cluster" = "owned"
+    "kubernetes.io/role/elb" = "1"
   }
   
 }
