@@ -23,9 +23,10 @@ module "sg" {
 
 module "EKS" {
    source = "./module/EKS"
-   eks_version = "1.34"
+   eks_version = "1.33"
    subnet_ids =  module.vpc.private_subnet_id
-   security_group_ids = module.sg.sg-id
+   security_group_id = [ module.sg.sg-id ]
+   worker_security_group_id = [ module.sg.worker-sg-id ]
    iam-arn = module.iam.iam-cluser-role_arn
    eks_name = local.name
    node_desired_size =  1
@@ -33,5 +34,16 @@ module "EKS" {
    node_min_size = 1
    node-arn = module.iam.eks-node-role_arn
    ami = local.ami
-   node_instance_type = ""
+   node_instance_type = "t2.large"
+   eks_ecr_policy = module.iam.eks_ecr_policy
+   eks_cni_policy = module.iam.eks_cni_policy
+   eks_worker_node_policy = module.iam.eks_worker_node_policy
  }
+
+ module "rds" {
+   source = "./module/RDS"
+   name = local.name
+   db-security_group_id = [ module.sg.rds-sg-id ]
+   subnet_ids = module.vpc.private_subnet_id
+ }
+ 

@@ -7,9 +7,15 @@ variable "subnet_ids" {
   type = list(string)
 }
 
-variable "security_group_ids" {
-  type = string
+variable "security_group_id" {
+  type = list(string)
+  default = [ ]
   }
+
+variable "worker_security_group_id" {
+  description = "Security group IDs for the EKS worker nodes"
+  type        = list(string)
+}
 
   variable "iam-arn" {
     type = string
@@ -38,5 +44,15 @@ variable "security_group_ids" {
     type = string
   }
   variable "node_instance_type" {
+    type = string
+  }
+
+  variable "eks_worker_node_policy" {
+    type = string
+  }
+  variable "eks_cni_policy" {
+    type = string
+  }
+  variable "eks_ecr_policy" {
     type = string
   }

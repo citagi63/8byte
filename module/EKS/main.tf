@@ -13,8 +13,7 @@ resource "aws_eks_cluster" "eks" {
     endpoint_private_access = true
     endpoint_public_access  = true
     public_access_cidrs     = ["0.0.0.0/0"]
-    security_group_ids      = var.subnet_ids
-
+    security_group_ids      = var.security_group_id
   }
 
   access_config {
@@ -37,20 +36,44 @@ resource "aws_eks_node_group" "main" {
     max_size     = var.node_max_size
     min_size     = var.node_min_size
   }
-
-  instance_types = var.node_instance_type
+  
+  instance_types = ["t2.large"]
   ami_type       = var.ami
+
+  remote_access {
+    ec2_ssh_key = "aws_test"
+    source_security_group_ids = var.worker_security_group_id
+  }
 
   update_config {
     max_unavailable = 1
   }
 
   depends_on = [
-    aws_eks_cluster.main,
-    aws_iam_role_policy_attachment.eks_worker_node_policy,
-    aws_iam_role_policy_attachment.eks_cni_policy,
-    aws_iam_role_policy_attachment.ecr_read_only
+    aws_eks_cluster.eks,
+    var.eks_ecr_policy,
+    var.eks_cni_policy,
+    var.eks_ecr_policy
   ]
+}
 
-  tags = "${var.eks_name}-node-group"
+
+resource "aws_eks_access_entry" "root_user" {
+  cluster_name      = aws_eks_cluster.eks.name
+  principal_arn     = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+  
+  depends_on = [aws_eks_cluster.eks]
+}
+
+resource "aws_eks_access_policy_association" "root_user_admin" {
+  cluster_name  = aws_eks_cluster.eks.name
+  principal_arn = aws_eks_access_entry.root_user.principal_arn
+  
+  policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+  
+  access_scope {
+    type = "cluster"
+  }
+  
+  depends_on = [aws_eks_access_entry.root_user]
 }

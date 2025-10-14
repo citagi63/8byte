@@ -5,16 +5,18 @@ on:
     branches:
       - dev
       - staging
-      - release  # release = production
+      - release  
 
 jobs:
   terraform:
     name: Terraform
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name == 'release' && 'prod' && 'dev' || github.ref_name }}
 
     permissions:
-      id-token: write      # Required for OIDC auth
-      contents: read       # Required to checkout repo
+      id-token: write    
+      contents: read       
 
     steps:
       - name: Checkout
@@ -52,10 +54,5 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -input=false
 
-      - name: Terraform Apply (non-prod)
-        if: github.ref != 'refs/heads/release'
+      - name: Terraform Apply
         run: terraform apply -auto-approve -input=false
-
-      - name: Terraform Apply (prod)
-        if: github.ref == 'refs/heads/release'
-        run: terraform apply -input=false
