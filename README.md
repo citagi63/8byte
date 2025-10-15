@@ -105,7 +105,7 @@ Do not hardcode credentials in Terraform code. Use AWS Secrets Manager or SSM Pa
 
 Each environment (dev, staging, prod) is managed via Terraform Workspaces.
 
-The state files are stored remotely in AWS S3, with DynamoDB for state locking.
+The state files are stored remotely in AWS S3.
 
 The AWS authentication in GitHub Actions uses OIDC (no static credentials).
 
@@ -154,5 +154,6 @@ Requires selecting the environment (dev, staging, or prod) before execution.
     Prompts for environment selection
     
     Runs terraform init, workspace select, and terraform destroy -auto-approve
+
 
 
