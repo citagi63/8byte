@@ -1,0 +1,71 @@
+name: Terraform Dry Run
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - staging
+      - release
+
+jobs:
+  terraform-dryrun:
+    name: Terraform Dry Run (Plan Only)
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write  # Required to comment plan output on PR
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.13.2
+
+      - name: Configure AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::253490770638:role/GitHubTerraformRole
+          aws-region: ap-south-1
+
+      - name: Set Terraform Workspace
+        run: |
+          BRANCH_NAME=${{ github.base_ref }}
+          case "$BRANCH_NAME" in
+            dev) WORKSPACE=dev ;;
+            staging) WORKSPACE=staging ;;
+            release) WORKSPACE=prod ;;
+            *) WORKSPACE=default ;;
+          esac
+          echo "WORKSPACE=$WORKSPACE" >> $GITHUB_ENV
+          echo "Terraform workspace set to: $WORKSPACE"
+
+      - name: Terraform Init
+        run: terraform init -input=false
+
+      - name: Select Terraform Workspace
+        run: terraform workspace select $WORKSPACE || terraform workspace new $WORKSPACE
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan (Dry Run)
+        id: plan
+        run: terraform plan -no-color -input=false
+        continue-on-error: true
+
+      - name: Post Plan Result as PR Comment
+        if: always()
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: terraform-plan
+          message: |
+            ### 🧪 Terraform Plan Output (Dry Run)
+            **Environment:** `${{ env.WORKSPACE }}`
+            ```
+            ${{ steps.plan.outputs.stdout }}
+            ```
