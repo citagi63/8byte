@@ -17,7 +17,8 @@ When a commit happens on a specific branch (for example, `dev`),the github actio
 ---
 **Folder Structure**
 
-```8byte/
+```
+8byte/
 ├── main.tf
 ├── variables.tf
 ├── backend.tf
@@ -56,7 +57,9 @@ When a commit happens on a specific branch (for example, `dev`),the github actio
         ├── main.tf
         ├── variables.tf
         ├── backend.tf
-        └── outputs.tf```
+        └── outputs.tf
+        ```
+
 
 
 
