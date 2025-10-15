@@ -15,7 +15,9 @@ When a commit happens on a specific branch (for example, `dev`),the github actio
 | `main`      | `prod`              | Production    | On commit or merge to `main` |
 
 ---
-8byte/
+**Folder Structure**
+
+```8byte/
 ├── main.tf
 ├── variables.tf
 ├── backend.tf
@@ -54,7 +56,7 @@ When a commit happens on a specific branch (for example, `dev`),the github actio
         ├── main.tf
         ├── variables.tf
         ├── backend.tf
-        └── outputs.tf
+        └── outputs.tf```
 
 
 
