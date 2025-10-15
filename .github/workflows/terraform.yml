@@ -21,6 +21,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        if: "!contains(github.event.head_commit.message, 'README') && !contains(join(github.event.commits.*.modified), 'README.md')"
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3

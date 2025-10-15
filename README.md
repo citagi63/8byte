@@ -30,7 +30,8 @@ Each environment (dev, staging, prod) maintains its own separate state file with
 │
 ├── .github/
 │   └── workflows/
-│       └── terraform-deploy.yml
+│       └── terraform.yml
+|       └── terraform-destory.yml
 │
 └── module/
     ├── EKS/
