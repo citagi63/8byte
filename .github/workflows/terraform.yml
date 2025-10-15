@@ -1,6 +1,16 @@
 name: Terraform Deployment
 
 on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select environment to Deploy"
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
   push:
     branches:
       - dev
