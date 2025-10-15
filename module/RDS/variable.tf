@@ -9,3 +9,10 @@ variable "subnet_ids" {
 variable "db-security_group_id" {
   type = list(string)
 }
+
+variable "dbuser" {
+  type = string
+}
+variable "dbpasswd" {
+  type = string
+}
