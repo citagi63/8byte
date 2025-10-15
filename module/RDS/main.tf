@@ -13,8 +13,8 @@ resource "aws_db_instance"  "aws_db_instance" {
   engine_version = "8.0.42"
   instance_class = "db.t4g.micro"
   identifier = "${var.name}-db"
-  username = "dbuser"
-  password = "dbpassword"
+  username = var.dbuser
+  password = var.dbpasswd
 
   vpc_security_group_ids = var.db-security_group_id
   db_subnet_group_name = aws_db_subnet_group.aws_db_subnet_group.name

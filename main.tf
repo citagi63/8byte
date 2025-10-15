@@ -45,5 +45,7 @@ module "EKS" {
    name = local.name
    db-security_group_id = [ module.sg.rds-sg-id ]
    subnet_ids = module.vpc.private_subnet_id
+   dbuser = local.rds_cred.username
+   dbpasswd = local.rds_cred.password
  }
  
